@@ -1,0 +1,66 @@
+{
+    "actorSpecification": 1,
+    "name": "cboe-macro-volatility-dataset",
+    "title": "Cboe Macro Volatility & Global Spreads Dataset",
+    "description": "Daily cross-asset implied vs realized volatility spreads, Cboe risk indices (VIX, VVIX, SKEW, VXN, RVX, GVZ, OVX), and tail-risk signals.",
+    "views": {
+        "overview": {
+            "title": "Global Volatilities & Realized Spreads (Exhibit 1)",
+            "description": "Cross-asset 1M Implied Volatility vs Realized Volatility spread overview",
+            "transformation": {
+                "fields": [
+                    "assetClass",
+                    "ticker",
+                    "volatilityTicker",
+                    "impliedVolatility1M",
+                    "realizedVolatility1M",
+                    "ivRvSpreadPts",
+                    "historicalPercentile1Y",
+                    "pricingCondition",
+                    "updatedAt"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "assetClass": {
+                        "label": "Asset Class",
+                        "format": "text"
+                    },
+                    "ticker": {
+                        "label": "Ticker",
+                        "format": "text"
+                    },
+                    "volatilityTicker": {
+                        "label": "Vol Benchmark",
+                        "format": "text"
+                    },
+                    "impliedVolatility1M": {
+                        "label": "1M Implied Vol (%)",
+                        "format": "number"
+                    },
+                    "realizedVolatility1M": {
+                        "label": "1M Realized Vol (%)",
+                        "format": "number"
+                    },
+                    "ivRvSpreadPts": {
+                        "label": "IV - RV Spread (pts)",
+                        "format": "number"
+                    },
+                    "historicalPercentile1Y": {
+                        "label": "1Y Percentile (%)",
+                        "format": "number"
+                    },
+                    "pricingCondition": {
+                        "label": "Option Pricing Status",
+                        "format": "text"
+                    },
+                    "updatedAt": {
+                        "label": "Updated",
+                        "format": "text"
+                    }
+                }
+            }
+        }
+    }
+}
