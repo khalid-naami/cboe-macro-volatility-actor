@@ -1,0 +1,32 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Cboe Macro Volatility & Quant Risk Output",
+    "description": "Comprehensive report of Cboe Volatility Indices, SKEW tail-risk benchmark evaluation, Exhibit 1 global volatility matrix, VIX/VVIX vol-of-vol dynamics, and cross-asset correlation matrix.",
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string"
+        },
+        "timestamp": {
+            "type": "string"
+        },
+        "liveIndices": {
+            "type": "object"
+        },
+        "skewTailRiskModel": {
+            "type": "object"
+        },
+        "vixVvixDynamics": {
+            "type": "object"
+        },
+        "globalVolatilitiesExhibit1": {
+            "type": "array"
+        },
+        "crossAssetCorrelationMatrix": {
+            "type": "object"
+        },
+        "automatedQuantNarrative": {
+            "type": "array"
+        }
+    }
+}
