@@ -1,0 +1,36 @@
+{
+    "title": "Cboe Macro Volatility Actor Input Schema",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "lookbackPeriod": {
+            "title": "Historical Lookback Period",
+            "type": "string",
+            "description": "Lookback period for historical volatility series and 1-year percentiles.",
+            "default": "1y",
+            "enum": ["6mo", "1y", "2y", "5y"],
+            "editor": "select"
+        },
+        "correlationWindowDays": {
+            "title": "Correlation Window (Trading Days)",
+            "type": "integer",
+            "description": "Number of trading days for rolling cross-asset correlation matrix (default 21 days = 1 Month).",
+            "default": 21,
+            "minimum": 10,
+            "maximum": 252
+        },
+        "includeCorrelationMatrix": {
+            "title": "Include Cross-Asset Correlation Matrix",
+            "type": "boolean",
+            "description": "Compute full pairwise correlation matrix across equities, commodities, crypto, FX, and rates.",
+            "default": true
+        },
+        "includeHistoricalSeries": {
+            "title": "Include Historical Time Series",
+            "type": "boolean",
+            "description": "Include daily historical time series of Cboe volatility indices (VIX, VVIX, SKEW, etc.).",
+            "default": true
+        }
+    },
+    "required": ["lookbackPeriod"]
+}
