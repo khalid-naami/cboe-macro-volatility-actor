@@ -1,0 +1,14 @@
+{
+    "actorSpecification": 1,
+    "name": "cboe-macro-volatility-actor",
+    "title": "Cboe Macro Volatility & Quant Risk Analytics (VIX, VVIX, SKEW, IV-HV Spread & Cross-Asset Correlation)",
+    "description": "Institutional cross-asset volatility monitor & quant risk engine: Cboe SKEW Black Swan tail risk index, VIX/VVIX vol-of-vol dynamics, Exhibit 1 Global IV vs Realized Spread matrix, and 1M cross-asset correlation matrix.",
+    "version": "1.0",
+    "meta": {
+        "templateId": "python-start"
+    },
+    "dockerfile": "../Dockerfile",
+    "input": "./input_schema.json",
+    "dataset": "./dataset_schema.json",
+    "output": "./output_schema.json"
+}
