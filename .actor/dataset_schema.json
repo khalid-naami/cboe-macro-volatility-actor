@@ -1,8 +1,58 @@
 {
     "actorSpecification": 1,
-    "name": "cboe-macro-volatility-dataset",
-    "title": "Cboe Macro Volatility & Global Spreads Dataset",
-    "description": "Daily cross-asset implied vs realized volatility spreads, Cboe risk indices (VIX, VVIX, SKEW, VXN, RVX, GVZ, OVX), and tail-risk signals.",
+    "fields": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": true,
+        "required": [],
+        "properties": {
+            "assetClass": {
+                "type": "string",
+                "title": "Asset Class",
+                "nullable": true
+            },
+            "ticker": {
+                "type": "string",
+                "title": "Ticker",
+                "nullable": true
+            },
+            "volatilityTicker": {
+                "type": "string",
+                "title": "Vol Benchmark",
+                "nullable": true
+            },
+            "impliedVolatility1M": {
+                "type": "number",
+                "title": "1M Implied Vol (%)",
+                "nullable": true
+            },
+            "realizedVolatility1M": {
+                "type": "number",
+                "title": "1M Realized Vol (%)",
+                "nullable": true
+            },
+            "ivRvSpreadPts": {
+                "type": "number",
+                "title": "IV - RV Spread (pts)",
+                "nullable": true
+            },
+            "historicalPercentile1Y": {
+                "type": "number",
+                "title": "1Y Percentile (%)",
+                "nullable": true
+            },
+            "pricingCondition": {
+                "type": "string",
+                "title": "Option Pricing Status",
+                "nullable": true
+            },
+            "updatedAt": {
+                "type": "string",
+                "title": "Updated",
+                "nullable": true
+            }
+        }
+    },
     "views": {
         "overview": {
             "title": "Global Volatilities & Realized Spreads (Exhibit 1)",
