@@ -1,0 +1,15 @@
+{
+    "actorKeyValueStoreSchemaVersion": 1,
+    "title": "Cboe Macro Volatility Key-Value Store",
+    "description": "Summary report for Cboe Macro Volatility & Quant Risk Analytics.",
+    "collections": {
+        "output": {
+            "title": "Cboe Macro Volatility Report",
+            "description": "Live volatility indices, SKEW tail-risk model, VIX/VVIX dynamics, Exhibit 1 spreads, correlation matrix, and historical series.",
+            "key": "OUTPUT",
+            "contentTypes": [
+                "application/json"
+            ]
+        }
+    }
+}
