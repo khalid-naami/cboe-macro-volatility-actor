@@ -87,7 +87,8 @@ class VolatilityQuantEngine:
                     prices = hist_df[asset_sym].dropna()
                     if len(prices) >= 21:
                         ret_21 = prices.pct_change().dropna().tail(21)
-                        rv_1m = float(ret_21.std() * np.sqrt(252) * 100.0)
+                        rv_raw = float(ret_21.std() * np.sqrt(252) * 100.0) if len(ret_21) >= 2 else 15.0
+                        rv_1m = rv_raw if np.isfinite(rv_raw) else 15.0
                     else:
                         rv_1m = 15.0
                 else:
