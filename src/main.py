@@ -2,7 +2,9 @@
 
 import asyncio
 import logging
+import math
 import sys
+import pandas as pd
 from datetime import datetime, timezone
 from typing import Dict, Any, List
 from apify import Actor
@@ -16,6 +18,24 @@ logging.basicConfig(
     handlers=[logging.StreamHandler(sys.stdout)]
 )
 logger = logging.getLogger("cboe-macro-volatility-actor")
+
+
+def sanitize_record(obj: Any) -> Any:
+    """Recursively strip None and non-finite floats before pushing to Apify dataset."""
+    if obj is None:
+        return None
+    if isinstance(obj, float):
+        return obj if math.isfinite(obj) else None
+    if isinstance(obj, list):
+        return [v for v in (sanitize_record(x) for x in obj) if v is not None]
+    if isinstance(obj, dict):
+        clean = {}
+        for k, v in obj.items():
+            sv = sanitize_record(v)
+            if sv is not None:
+                clean[k] = sv
+        return clean
+    return obj
 
 
 async def main() -> None:
@@ -40,6 +60,7 @@ async def main() -> None:
 
         if hist_df is None or hist_df.empty:
             logger.error("Failed to fetch historical cross-asset dataset. Aborting.")
+            await Actor.fail(status_message="Failed to fetch historical cross-asset dataset.")
             return
 
         # 2. SKEW Deep Dive Evaluation
@@ -101,20 +122,35 @@ async def main() -> None:
             exhibit1_rows=exhibit1_rows
         )
 
-        # 7. Push Dataset Records
+        # 7. Historical Volatility Indices Time Series (wired to includeHistoricalSeries)
+        historical_series = []
+        if include_hist_series:
+            vol_cols = [c for c in CboeDataEngine.VOL_INDICES.values() if c in hist_df.columns]
+            if vol_cols:
+                for idx, row in hist_df[vol_cols].iterrows():
+                    dt_str = idx.strftime("%Y-%m-%d") if hasattr(idx, "strftime") else str(idx)[:10]
+                    entry: Dict[str, Any] = {"date": dt_str}
+                    for name, sym in CboeDataEngine.VOL_INDICES.items():
+                        if sym in vol_cols and pd.notna(row[sym]) and math.isfinite(float(row[sym])):
+                            entry[name] = round(float(row[sym]), 2)
+                    historical_series.append(entry)
+
+        # 8. Push Dataset Records
         dataset_records = []
         now_iso = datetime.now(timezone.utc).isoformat()
         for row in exhibit1_rows:
-            dataset_records.append({
+            cleaned = sanitize_record({
                 **row,
                 "updatedAt": now_iso
             })
+            if cleaned:
+                dataset_records.append(cleaned)
 
         if dataset_records:
             logger.info(f"Pushing {len(dataset_records)} Exhibit 1 records to Apify dataset...")
             await Actor.push_data(dataset_records)
 
-        # 8. Save Comprehensive Report to Key-Value Store (OUTPUT)
+        # 9. Save Comprehensive Report to Key-Value Store (OUTPUT)
         output_payload = {
             "title": "Cboe Macro Volatility & Institutional Quant Risk Analytics Report",
             "timestamp": now_iso,
@@ -123,9 +159,13 @@ async def main() -> None:
             "vixVvixDynamics": vix_vvix_dynamics,
             "globalVolatilitiesExhibit1": exhibit1_rows,
             "crossAssetCorrelationMatrix": correlation_data,
+            "historicalVolatilitySeries": historical_series,
             "automatedQuantNarrative": narrative
         }
         await Actor.set_value("OUTPUT", output_payload)
+        if not dataset_records:
+            await Actor.fail(status_message="No Cboe macro volatility records were generated.")
+            return
 
         logger.info(
             f"Actor completed successfully! SKEW: {skew_val:.2f} ({skew_evaluation['status']}), "
